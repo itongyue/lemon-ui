@@ -407,6 +407,17 @@ $('#{{ $id }}_grid_tool_form').find(':submit[select-rows]').click(function() {
         $('#{{ $id }}_grid_tool_form').append('<input type="hidden" name="{{ $pager->getPageName() }}" value="{{ $pager->currentPage() }}"/>');
     @endif
 }).prop('disabled', true);
+
+//region  检查有多少未选中的选择框，如果无未选中的则触发全选框，否则遍历表格行并触发选中事件
+if($('#{{ $id }} tbody :checkbox[name="{{ $select_rows_name  }}[]"]:not(:checked)').length==0){
+    $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}_all"]').prop("checked",true).trigger("change");
+}
+else{
+    $('#{{ $id }} tbody :checkbox[name="{{ $select_rows_name  }}[]"]:checked').each(function(index,value){
+        _{{ $id }}_table_api.row(index).select();
+    });
+}
+//endregion
 @endif
 
 $('#{{ $id }}_grid_tool_form').find(':submit:not([select-rows])').click(function() {

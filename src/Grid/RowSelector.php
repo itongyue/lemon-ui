@@ -23,6 +23,16 @@ class RowSelector extends Column
 
     protected $type = 'rowSelect';
 
+    protected $field = 'status';
+
+    public function __construct($name, $title = null, $field = null)
+    {
+        parent::__construct($name, $title);
+        if ($field) {
+            $this->field = $field;
+        }
+    }
+
     /**
      * @return string
      */
@@ -50,8 +60,9 @@ EOT;
      */
     public function render(Row $row, Builder $builder)
     {
+        $checked = $row->rawData()[$this->field] ? "checked" : "";
         $html = <<<EOT
-<input type="checkbox" name="{$this->name}[]" value="{$row->getMajorKey()}" />
+<input {$checked} type="checkbox" name="{$this->name}[]" value="{$row->getMajorKey()}" />
 EOT;
 
         return new HtmlString($html);

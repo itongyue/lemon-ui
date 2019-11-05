@@ -37,6 +37,7 @@ class Builder extends Element implements Renderable
      */
     protected $majorKey = 'id';
 
+
     /**
      * 数据源
      * @var array
@@ -230,15 +231,14 @@ class Builder extends Element implements Renderable
     {
         if (is_array($column)) {
             $columns = $column;
-        }
-        else {
+        } else {
             array_unshift($columns, $column);
         }
 
         $this->complexCols[$name] = [
-            'name'      => $name,
-            'title'     => title_case($title),
-            'columns'   => $columns
+            'name' => $name,
+            'title' => title_case($title),
+            'columns' => $columns
         ];
 
         return $this;
@@ -251,7 +251,7 @@ class Builder extends Element implements Renderable
      */
     public function hidden(...$columns)
     {
-        if ( is_array($columns[0]) ) {
+        if (is_array($columns[0])) {
             $columns = $columns[0];
         }
 
@@ -338,7 +338,7 @@ class Builder extends Element implements Renderable
      */
     public function sort(...$columns)
     {
-        if ( is_array($columns[0]) ) {
+        if (is_array($columns[0])) {
             $columns = $columns[0];
         }
 
@@ -445,8 +445,7 @@ class Builder extends Element implements Renderable
     {
         if (is_array($name)) {
             $this->config = array_merge($this->config, $name);
-        }
-        else {
+        } else {
             array_set($this->config, (string)$name, $value);
         }
 
@@ -480,17 +479,17 @@ class Builder extends Element implements Renderable
         }
 
         return array_merge(parent::variables(), [
-            'title'         => $this->title,
-            'filters'       => $this->filters,
-            'toolbar'       => $this->buildToolbar(),
-            'headers'       => $this->header,
-            'rows'          => $this->rows,
-            'pager'         => $this->pager,
-            'emptyString'   => $this->emptyString,
-            'config'        => $this->buildConfig(),
-            'visColumns'    => $this->visibleCols,
-            'fixedColumn'   => $this->fixedColumn,
-            '_resource_name'=> $this->getResourceName()
+            'title' => $this->title,
+            'filters' => $this->filters,
+            'toolbar' => $this->buildToolbar(),
+            'headers' => $this->header,
+            'rows' => $this->rows,
+            'pager' => $this->pager,
+            'emptyString' => $this->emptyString,
+            'config' => $this->buildConfig(),
+            'visColumns' => $this->visibleCols,
+            'fixedColumn' => $this->fixedColumn,
+            '_resource_name' => $this->getResourceName()
         ]);
     }
 
@@ -553,20 +552,17 @@ class Builder extends Element implements Renderable
             $data = $pager->getCollection();
             $this->total = $pager->total();
             $this->setPerPage($pager->perPage());
-        }
-        else if ($this->data instanceof Eloquent || $this->data instanceof \Illuminate\Database\Eloquent\Builder) {
+        } else if ($this->data instanceof Eloquent || $this->data instanceof \Illuminate\Database\Eloquent\Builder) {
             if ($this->usePagination) {
                 $pager = $this->data->paginate($this->perPage);
 
                 $data = $pager->items();
                 $this->total = $pager->total();
-            }
-            else {
+            } else {
                 $data = $this->data->get();
                 $this->total = $data ? count($data) : 0;
             }
-        }
-        else {
+        } else {
             $data = $this->data instanceof Collection ? $this->data : collect($this->data);
 
             if (is_null($this->total)) {
@@ -596,9 +592,9 @@ class Builder extends Element implements Renderable
     {
         $toolbar = $this->toolbar();
         if ($toolbar->needSelectRow()) {
-            $rowSelector = new RowSelector($this->getId().'_ids');
+            $rowSelector = new RowSelector($this->getId() . '_ids', "", $toolbar->checkboxField());
             $this->columns->push($rowSelector);
-            $nullable = new Nullable($this->getId().'_null');
+            $nullable = new Nullable($this->getId() . '_null');
             $this->columns->push($nullable);
         }
     }
@@ -615,7 +611,9 @@ class Builder extends Element implements Renderable
         // 收集合并列名
         $complexColumns = array_column($this->complexCols, 'columns', 'name');
         $complexColumnNames = array_collapse($complexColumns);
-        $complexColumnFirsts = array_map(function ($columns) {return reset($columns); }, $complexColumns);
+        $complexColumnFirsts = array_map(function ($columns) {
+            return reset($columns);
+        }, $complexColumns);
 
         $_columns = [];
         $hidden = [];
@@ -624,17 +622,17 @@ class Builder extends Element implements Renderable
             $name = $column->getName();
 
             // 优先将不可见列压入列表
-            if ( ! $column->isVisible() ) {
+            if (!$column->isVisible()) {
                 $hidden[$name] = $column;
                 continue;
             }
 
             // 将未合并列及已定义列名的合并列按权重加到表头
             if (in_array($name, $complexColumnFirsts)) {
-                collect($complexColumnFirsts)->filter(function ($val) use($name) {
+                collect($complexColumnFirsts)->filter(function ($val) use ($name) {
                     return $val == $name;
-                })->each(function ($name, $key) use($columns, &$header, &$_columns) {
-                    $complexColumns = $columns->filter(function (Column $column) use($key) {
+                })->each(function ($name, $key) use ($columns, &$header, &$_columns) {
+                    $complexColumns = $columns->filter(function (Column $column) use ($key) {
                         return in_array($column->getName(), $this->complexCols[$key]['columns']) && $column->isVisible();
                     });
 
@@ -642,7 +640,7 @@ class Builder extends Element implements Renderable
                     $this->complexCols[$key]['columns'] = $complexColumns;
 
                     $header[$key] = $this->complexCols[$key];
-                    $complexColumns->each(function(Column $column) use(&$_columns) {
+                    $complexColumns->each(function (Column $column) use (&$_columns) {
                         $_columns[] = $column;
                     });
                 });
@@ -660,7 +658,7 @@ class Builder extends Element implements Renderable
         foreach (array_keys($this->complexCols) as $key) {
             if (!isset($header[$key])) {
                 // 将未定义列名的合并列追加到表头
-                $complexColumns = $columns->filter(function (Column $column) use($key) {
+                $complexColumns = $columns->filter(function (Column $column) use ($key) {
                     return in_array($column->getName(), $this->complexCols[$key]['columns']) && $column->isVisible();
                 });
 
@@ -668,7 +666,7 @@ class Builder extends Element implements Renderable
                 $this->complexCols[$key]['columns'] = $complexColumns;
 
                 $header[$key] = $this->complexCols[$key];
-                $complexColumns->each(function(Column $column) use($_columns) {
+                $complexColumns->each(function (Column $column) use ($_columns) {
                     $_columns[] = $column;
                 });
             }
@@ -677,17 +675,16 @@ class Builder extends Element implements Renderable
         // 可视列名
         $visibleColumns = [];
         $fixedColumn = $this->fixedColumn;
-        foreach($header as $colName => $column) {
-            if(is_array($column) && isset($column['columns'])) {
-                foreach($column['columns'] as $_column) {
+        foreach ($header as $colName => $column) {
+            if (is_array($column) && isset($column['columns'])) {
+                foreach ($column['columns'] as $_column) {
                     $visibleColumns[] = $_column;
 
                     if (is_string($fixedColumn) && $_column->getName() === $fixedColumn) {
                         $fixedColumn = count($visibleColumns);
                     }
                 }
-            }
-            else {
+            } else {
                 $visibleColumns[] = $column;
             }
 
@@ -702,8 +699,7 @@ class Builder extends Element implements Renderable
                 // 避免错误覆盖
                 if (isset($header[$name])) {
                     $header[$name . count($header)] = $column;
-                }
-                else {
+                } else {
                     $header[$name] = $column;
                 }
 
@@ -728,7 +724,6 @@ class Builder extends Element implements Renderable
 
         $this->rows = $data->map(function ($data) {
             $row = new Row($this->columns);
-
             $row->setMajorKeyName($this->majorKey);
             $row->fill($data, $this);
 
@@ -738,7 +733,6 @@ class Builder extends Element implements Renderable
         // 解决特殊情况下生成空行
         if ($this->emptyString === '###NEW###') {
             $row = new Row($this->columns);
-
             $row->setMajorKeyName($this->majorKey);
             $row->fill([$this->majorKey => '__new_'], $this);
 

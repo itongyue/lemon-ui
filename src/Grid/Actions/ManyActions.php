@@ -83,6 +83,15 @@ class ManyActions extends Element implements Action
         return false;
     }
 
+    public function checkboxField(){
+        foreach ($this->items as $item){
+            if($item instanceof Action && $item->checkboxField()){
+                return $item->checkboxField();
+            }
+        }
+        return false;
+    }
+
     /**
      * @param mixed $item
      * @return $this
