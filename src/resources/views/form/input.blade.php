@@ -31,10 +31,12 @@
 @if($config['alias'] != 'text')
 @script
 
+{{--
 <script>
     $(function() {
         $('#{{ $id }}').inputmask(@json($config));
     });
 </script>
+--}}
 @endscript
 @endif
