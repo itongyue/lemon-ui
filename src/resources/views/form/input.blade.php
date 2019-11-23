@@ -27,8 +27,14 @@
         $config['digits'] = $digits;
     }
 @endphp
+
+@if($config['alias'] != 'text')
 @script
-$(function() {
-  $('#{{ $id }}').inputmask(@json($config));
-});
+
+<script>
+    $(function() {
+        $('#{{ $id }}').inputmask(@json($config));
+    });
+</script>
 @endscript
+@endif
