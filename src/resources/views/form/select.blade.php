@@ -26,6 +26,7 @@
 @endphp
 @if(isset($config['select2']) && $config['select2'])
 @script
+<script>
 var __{{ $id }}_config = @json($config);
 @isset($keywords)
 var __{{ $id }}_keywords = @json($keywords);
@@ -80,6 +81,11 @@ __{{ $id }}_config.matcher = function(params, data) {
     return null;
 }
 @endisset
-$('#{{ $id }}').select2(__{{ $id }}_config);
+$(document).on("ready pjax:end",function(){
+    if($().select2){
+        $('#{{ $id }}').select2(__{{ $id }}_config);
+    }
+})
+</script>
 @endscript
 @endif

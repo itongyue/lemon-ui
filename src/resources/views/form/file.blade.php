@@ -139,7 +139,8 @@
 
 @endphp
 @script
-$(function() {
+<script>
+$(document).on("ready pjax:end",function () {
 var config = @json($config);
 
 @if(isset($previewUrl) && $previewUrl)
@@ -184,8 +185,9 @@ config.ajaxSettings.dataFilter = function(str, type) {
     });
 }
 @endif
-
-$('#{{ $id }}').fileinput(config);
+if($().fileinput){
+    $('#{{ $id }}').fileinput(config);
+}
 
 @isset($deleteUrl)
 var confirm_delete = false;
@@ -228,4 +230,5 @@ $('#{{ $id }}').closest('form').submit(function() {
 @endisset
 
 });
+</script>
 @endscript
