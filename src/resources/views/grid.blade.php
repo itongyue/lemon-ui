@@ -348,18 +348,17 @@ var _{{ $id }}_config = {!! json_encode($config) !!};
 $(document).on('ready pjax:end',function(){
 var _table = $('#{{ $id }}');
 //判断表格是否存在，存在才需要初始化插件
-if(_table.length){
+if(_table.length) {
     var _{{ $id }}_table = $('#{{ $id }}').dataTable(_{{ $id }}_config);
-    new $.fn.dataTable.FixedHeader( _{{ $id }}_table );
+    new $.fn.dataTable.FixedHeader(_{{ $id }}_table);
 
-    var _{{ $id }}_table_api = new $.fn.dataTable.Api( _{{ $id }}_table );
-}
+    var _{{ $id }}_table_api = new $.fn.dataTable.Api(_{{ $id }}_table);
 
-{{-- 注销表格代码无意义，只需要在config中添加destroy:true即可--}}
-// var _uniqid_t = new Date().getTime();
-/*
-$(document).on('pjax:beforeReplace.'+ _uniqid_t, function(xhr, settings) {
-    if ($('#{{ $id }}').parents('#'+ $(xhr.target).attr('id')).length > 0) {
+    {{-- 注销表格代码无意义，只需要在config中添加destroy:true即可--}}
+    // var _uniqid_t = new Date().getTime();
+    /*
+    $(document).on('pjax:beforeReplace.'+ _uniqid_t, function(xhr, settings) {
+        if ($('#{{ $id }}').parents('#'+ $(xhr.target).attr('id')).length > 0) {
         _{{ $id }}_table_api && _{{ $id }}_table_api.destroy(true);
         _{{ $id }}_table && _{{ $id }}_table.destroy();
         $(document).off('pjax:beforeReplace.'+ _uniqid_t);
@@ -367,99 +366,98 @@ $(document).on('pjax:beforeReplace.'+ _uniqid_t, function(xhr, settings) {
 });
 */
     {{-- 朱：局部刷新是否会导致事件重复注册需要观测--}}
-@if(isset($config['select']) && isset($select_rows_name))
-$('#{{ $id }} :checkbox[name="{{ $select_rows_name }}_all"]').change(function() {
-    if ($(this).is(':checked')) {
-        _{{ $id }}_table_api.rows().select();
-    }
-    else {
-        _{{ $id }}_table_api.rows().deselect();
-    }
-});
-_{{ $id }}_table_api.on( 'select', function ( e, dt, type, indexes ) {
-    if ( type === 'row' ) {
-        dt.rows( indexes ).data().pluck( '{{ $select_rows_name }}' ).each(function(id) {
-            id = $(id).val();
-            $('#{{ $id }}_grid_tool_form').find(':hidden[name="{{ $select_rows_name }}[]"][value="'+id+'"]').remove();
-            $('#{{ $id }}_grid_tool_form').append('<input type="hidden" name="{{ $select_rows_name }}[]" value="'+id+'"/>');
-            $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}[]"][value="'+id+'"]').prop('checked', true);
-        });
+    @if(isset($config['select']) && isset($select_rows_name))
+    $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}_all"]').change(function () {
+        if ($(this).is(':checked')) {
+            _{{ $id }}_table_api.rows().select();
+        } else {
+            _{{ $id }}_table_api.rows().deselect();
+        }
+    });
+    _{{ $id }}_table_api.on('select', function (e, dt, type, indexes) {
+        if (type === 'row') {
+            dt.rows(indexes).data().pluck('{{ $select_rows_name }}').each(function (id) {
+                id = $(id).val();
+                $('#{{ $id }}_grid_tool_form').find(':hidden[name="{{ $select_rows_name }}[]"][value="' + id + '"]').remove();
+                $('#{{ $id }}_grid_tool_form').append('<input type="hidden" name="{{ $select_rows_name }}[]" value="' + id + '"/>');
+                $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}[]"][value="' + id + '"]').prop('checked', true);
+            });
 
-        $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}_all"]').prop('checked',
-            $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}[]"]:checked').length == $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}[]"]').length);
-        $('#{{ $id }}_grid_tool_form').find(':submit[select-rows]').prop('disabled', false);
-    }
-} );
-_{{ $id }}_table_api.on( 'deselect', function ( e, dt, type, indexes ) {
-    if ( type === 'row' ) {
-        dt.rows( indexes ).data().pluck( '{{ $select_rows_name }}' ).each(function(id) {
-            id = $(id).val();
-            $('#{{ $id }}_grid_tool_form').find(':hidden[name="{{ $select_rows_name }}[]"][value="'+id+'"]').remove();
-            $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}[]"][value="'+id+'"]').prop('checked', false);
-        });
+            $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}_all"]').prop('checked',
+                $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}[]"]:checked').length == $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}[]"]').length);
+            $('#{{ $id }}_grid_tool_form').find(':submit[select-rows]').prop('disabled', false);
+        }
+    });
+    _{{ $id }}_table_api.on('deselect', function (e, dt, type, indexes) {
+        if (type === 'row') {
+            dt.rows(indexes).data().pluck('{{ $select_rows_name }}').each(function (id) {
+                id = $(id).val();
+                $('#{{ $id }}_grid_tool_form').find(':hidden[name="{{ $select_rows_name }}[]"][value="' + id + '"]').remove();
+                $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}[]"][value="' + id + '"]').prop('checked', false);
+            });
 
-        $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}_all"]').prop('checked', false);
-        $('#{{ $id }}_grid_tool_form').find(':submit[select-rows]').prop('disabled', $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}[]"]:checked').length == 0);
-    }
-} );
+            $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}_all"]').prop('checked', false);
+            $('#{{ $id }}_grid_tool_form').find(':submit[select-rows]').prop('disabled', $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}[]"]:checked').length == 0);
+        }
+    });
 
-$('#{{ $id }}_grid_tool_form').find(':submit[select-rows]').click(function() {
-    var count = $('#{{ $id }}_grid_tool_form').find(':hidden[name="{{ $select_rows_name }}[]"]').length;
-    if (count == 0) {
-        alert($('#{{ $id }}').attr('select-message') || '请选择数据项！');
-        return false;
-    }
+    $('#{{ $id }}_grid_tool_form').find(':submit[select-rows]').click(function () {
+        var count = $('#{{ $id }}_grid_tool_form').find(':hidden[name="{{ $select_rows_name }}[]"]').length;
+        if (count == 0) {
+            alert($('#{{ $id }}').attr('select-message') || '请选择数据项！');
+            return false;
+        }
 
-    if ($(this).attr('confirm') && ! confirm($(this).attr('confirm'))) {
-        return false;
-    }
+        if ($(this).attr('confirm') && !confirm($(this).attr('confirm'))) {
+            return false;
+        }
 
-    $('#{{ $id }}_grid_tool_form').append('{{ csrf_field() }}');
-    $('#{{ $id }}_grid_tool_form').append('<input type="hidden" name="op" value="'+$(this).attr('id')+'"/>');
-    @if(isset($pager) && $pager->hasPages())
+        $('#{{ $id }}_grid_tool_form').append('{{ csrf_field() }}');
+        $('#{{ $id }}_grid_tool_form').append('<input type="hidden" name="op" value="' + $(this).attr('id') + '"/>');
+        @if(isset($pager) && $pager->hasPages())
         $('#{{ $id }}_grid_tool_form').append('<input type="hidden" name="{{ $pager->getPageName() }}" value="{{ $pager->currentPage() }}"/>');
-    @endif
-}).prop('disabled', true);
+        @endif
+    }).prop('disabled', true);
 
 //region  检查有多少未选中的选择框，如果无未选中的则触发全选框，否则遍历表格行并触发选中事件
-if($('#{{ $id }} tbody :checkbox[name="{{ $select_rows_name  }}[]"]:not(:checked)').length==0){
-    $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}_all"]').prop("checked",true).trigger("change");
-}
-else{
-    $('#{{ $id }} tbody :checkbox[name="{{ $select_rows_name  }}[]"]:checked').each(function(index,value){
-        _{{ $id }}_table_api.row(index).select();
-    });
-}
-//endregion
-@endif
-
-$('#{{ $id }}_grid_tool_form').find(':submit:not([select-rows])').click(function() {
-    if ($(this).attr('confirm') && ! confirm($(this).attr('confirm'))) {
-        return false;
+    if ($('#{{ $id }} tbody :checkbox[name="{{ $select_rows_name  }}[]"]:not(:checked)').length == 0) {
+        $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}_all"]').prop("checked", true).trigger("change");
+    } else {
+        $('#{{ $id }} tbody :checkbox[name="{{ $select_rows_name  }}[]"]:checked').each(function (index, value) {
+            _{{ $id }}_table_api.row(index).select();
+        });
     }
+//endregion
+    @endif
 
-    $('#{{ $id }}_grid_tool_form').append('{{ csrf_field() }}');
-    $('#{{ $id }}_grid_tool_form').append('<input type="hidden" name="op" value="'+$(this).attr('id')+'"/>');
-});
+    $('#{{ $id }}_grid_tool_form').find(':submit:not([select-rows])').click(function () {
+        if ($(this).attr('confirm') && !confirm($(this).attr('confirm'))) {
+            return false;
+        }
 
-@isset($config['settings'])
-_{{ $id }}_table_api.columns().flatten().each( function ( colIdx ) {
-    $('#modal_{{ $id }}_grid_settings')
-    .find('input:checkbox[name="visible_columns"][value='+colIdx+']')
-    .prop('checked', _{{ $id }}_table_api.column(colIdx).visible());
-} );
-
-$('#modal_{{ $id }}_grid_settings').find('button[name="apply_grid_settings"]').click(function(e) {
-    e.preventDefault();
-
-    $('#modal_{{ $id }}_grid_settings')
-    .find('input:checkbox[name="visible_columns"]').each(function() {
-        _{{ $id }}_table_api.column($(this).val()).visible($(this).prop('checked'));
+        $('#{{ $id }}_grid_tool_form').append('{{ csrf_field() }}');
+        $('#{{ $id }}_grid_tool_form').append('<input type="hidden" name="op" value="' + $(this).attr('id') + '"/>');
     });
 
-    $('#modal_{{ $id }}_grid_settings').modal('hide');
-});
-@endisset
+    @isset($config['settings'])
+    _{{ $id }}_table_api.columns().flatten().each(function (colIdx) {
+        $('#modal_{{ $id }}_grid_settings')
+            .find('input:checkbox[name="visible_columns"][value=' + colIdx + ']')
+            .prop('checked', _{{ $id }}_table_api.column(colIdx).visible());
+    });
+
+    $('#modal_{{ $id }}_grid_settings').find('button[name="apply_grid_settings"]').click(function (e) {
+        e.preventDefault();
+
+        $('#modal_{{ $id }}_grid_settings')
+            .find('input:checkbox[name="visible_columns"]').each(function () {
+            _{{ $id }}_table_api.column($(this).val()).visible($(this).prop('checked'));
+        });
+
+        $('#modal_{{ $id }}_grid_settings').modal('hide');
+    });
+    @endisset
+}
 });
 </script>
 @endscript
