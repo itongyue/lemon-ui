@@ -241,7 +241,8 @@
         'searching'     => false,
         'ordering'      => false,
         'paging'        => false,
-        'info'          => false
+        'info'          => false,
+        'destroy'       => true
     ], $config);
 
     // 设置可见性优先级
@@ -337,23 +338,35 @@
 @endphp
 
 @script
+<script>
+
+
 $('#{{ $id }}_grid_tool_form .pull-right').find('.btn-default').removeClass('btn-default');
 
-$(function() {
 var _{{ $id }}_config = {!! json_encode($config) !!};
-var _{{ $id }}_table = $('#{{ $id }}').dataTable(_{{ $id }}_config);
-new $.fn.dataTable.FixedHeader( _{{ $id }}_table );
 
-var _{{ $id }}_table_api = new $.fn.dataTable.Api( _{{ $id }}_table );
+$(document).on('ready pjax:end',function(){
+var _table = $('#{{ $id }}');
+//判断表格是否存在，存在才需要初始化插件
+if(_table.length){
+    var _{{ $id }}_table = $('#{{ $id }}').dataTable(_{{ $id }}_config);
+    new $.fn.dataTable.FixedHeader( _{{ $id }}_table );
 
-var _uniqid_t = new Date().getTime();
+    var _{{ $id }}_table_api = new $.fn.dataTable.Api( _{{ $id }}_table );
+}
+
+{{-- 注销表格代码无意义，只需要在config中添加destroy:true即可--}}
+// var _uniqid_t = new Date().getTime();
+/*
 $(document).on('pjax:beforeReplace.'+ _uniqid_t, function(xhr, settings) {
     if ($('#{{ $id }}').parents('#'+ $(xhr.target).attr('id')).length > 0) {
-        _{{ $id }}_table_api.destroy(true);
+        _{{ $id }}_table_api && _{{ $id }}_table_api.destroy(true);
+        _{{ $id }}_table && _{{ $id }}_table.destroy();
         $(document).off('pjax:beforeReplace.'+ _uniqid_t);
     }
 });
-
+*/
+    {{-- 朱：局部刷新是否会导致事件重复注册需要观测--}}
 @if(isset($config['select']) && isset($select_rows_name))
 $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}_all"]').change(function() {
     if ($(this).is(':checked')) {
@@ -448,10 +461,12 @@ $('#modal_{{ $id }}_grid_settings').find('button[name="apply_grid_settings"]').c
 });
 @endisset
 });
+</script>
 @endscript
 
 @if(isset($perPages))
 @script('grid')
+<script>
 $('#{{ $id }}_grid_tool_form [data-toggle="perpage"]').on('change', function(e) {
     e.preventDefault();
     var url = '{!! $perpage_url !!}';
@@ -464,11 +479,13 @@ $('#{{ $id }}_grid_tool_form [data-toggle="perpage"]').on('change', function(e) 
         $.pjax.reload({url: url});
     }
 });
+</script>
 @endscript
 @endif
 
 @if(isset($config['refresh']) && $config['refresh'])
 @script('grid')
+<script>
 $('#{{ $id }}_grid_tool_form [data-toggle="refresh"]').on('click', function(e) {
     e.preventDefault();
 
@@ -479,6 +496,7 @@ $('#{{ $id }}_grid_tool_form [data-toggle="refresh"]').on('click', function(e) {
         $.pjax.reload({url: '{!! $refresh_url !!}'});
     }
 });
+</script>
 @endscript
 @endif
 
@@ -490,6 +508,7 @@ $('#{{ $id }}_grid_tool_form [data-toggle="refresh"]').on('click', function(e) {
     <input type="hidden" name="id">
 </form>
 @script('grid')
+<script>
 function {{ $id }}_put_submit(id, message) {
     if ( message !== undefined && !confirm(message)) {
         return;
@@ -520,6 +539,7 @@ function {{ $id }}_patch_submit(op, id, message) {
     $('#{{ $id }}_patch_form').find(':hidden[name=op]').val(op);
     $('#{{ $id }}_patch_form').submit();
 }
+</script>
 @endscript
 @endif
 

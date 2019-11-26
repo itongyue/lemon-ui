@@ -17,7 +17,8 @@
 @endphp
 
 @script
-$(function() {
+<script>
+$(document).on('ready pjax:end',function() {
   $('#{{ $id }}').datetimepicker(@json($config));
   @if($minDate)
   $('#{{ $id }}').data("DateTimePicker").minDate('{{ $minDate }}');
@@ -26,4 +27,5 @@ $(function() {
   $('#{{ $id }}').data("DateTimePicker").maxDate('{{ $maxDate }}');
   @endif
 });
+</script>
 @endscript
