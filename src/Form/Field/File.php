@@ -64,7 +64,7 @@ class File extends Field
     protected function variables()
     {
         $max_filesize = UploadedFile::getMaxFilesize();
-        $max_filesize = min($max_filesize, $this->maxFileSize);
+        $max_filesize = min($max_filesize, $this->maxFileSize / 1024);
 
         return array_merge(parent::variables(), [
             'multiple'          => $this->multiple,
