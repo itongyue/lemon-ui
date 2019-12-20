@@ -19,10 +19,14 @@
     </div>
 </div>
 @script
-$('#{{ $startId }}').on("dp.change", function (e) {
-$('#{{ $endId }}').data("DateTimePicker").minDate(e.date);
-});
-$('#{{ $endId }}').on("dp.change", function (e) {
-$('#{{ $startId }}').data("DateTimePicker").maxDate(e.date);
-});
+<script>
+    $(document).on('ready pjax:end', function () {
+        $('#{{ $startId }}').on("dp.change", function (e) {
+            $('#{{ $endId }}').data("DateTimePicker").minDate(e.date);
+        });
+        $('#{{ $endId }}').on("dp.change", function (e) {
+            $('#{{ $startId }}').data("DateTimePicker").maxDate(e.date);
+        })
+    });
+</script>
 @endscript
