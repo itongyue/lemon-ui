@@ -1,5 +1,5 @@
 {
-    "name": "baisam/lemon-ui",
+    "name": "itongyue/lemon-ui",
     "description": "The web ui suite for laravel framework.",
     "keywords": ["laravel", "ui", "layout", "form", "grid", "chart"],
     "type": "library",
