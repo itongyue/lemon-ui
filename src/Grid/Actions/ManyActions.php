@@ -85,7 +85,7 @@ class ManyActions extends Element implements Action
 
     public function checkboxField(){
         foreach ($this->items as $item){
-            if($item instanceof Action && $item->checkboxField()){
+            if($item instanceof SubmitAction && $item->checkboxField()){
                 return $item->checkboxField();
             }
         }
