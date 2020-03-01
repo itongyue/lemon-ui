@@ -424,7 +424,9 @@ if(_table.length) {
         $('#{{ $id }} :checkbox[name="{{ $select_rows_name }}_all"]').prop("checked", true).trigger("change");
     } else {
         $('#{{ $id }} tbody :checkbox[name="{{ $select_rows_name  }}[]"]:checked').each(function (index, value) {
-            _{{ $id }}_table_api.row(index).select();
+            // $("#org_service tbody tr").index($(this).parentsUntil($("#org_service"),"tr"))
+            var i =$('#{{ $id }} tbody tr').index($(this).parentsUntil($('#{{ $id}}'),'tr'));
+            _{{ $id }}_table_api.row(i).select();
         });
     }
 //endregion
