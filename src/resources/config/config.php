@@ -24,6 +24,9 @@ return [
         'login' => [
             'view' => 'ui::layouts.login',
             'footer' => []
+        ],
+        'pjax' => [
+            'view' => 'ui::layouts.pjax'
         ]
     ],
 

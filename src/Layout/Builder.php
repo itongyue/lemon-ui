@@ -567,7 +567,7 @@ class Builder extends Element implements Renderable, Responsable
 
         // 如果是AJAX请求,则使用pjax模板渲染.
         if ($request->pjax()) {
-            $this->view = 'ui::layouts.pjax';
+            $this->view = array_get(config('ui.layouts.pjax'), 'view', 'ui::layouts.pjax');
         }
 
         return new Response($this);
