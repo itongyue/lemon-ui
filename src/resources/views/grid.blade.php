@@ -349,10 +349,14 @@ $(document).on('ready pjax:end',function(){
 var _table = $('#{{ $id }}');
 //判断表格是否存在，存在才需要初始化插件
 if(_table.length) {
-    var _{{ $id }}_table = $('#{{ $id }}').dataTable(_{{ $id }}_config);
-    new $.fn.dataTable.FixedHeader(_{{ $id }}_table);
-
-    var _{{ $id }}_table_api = new $.fn.dataTable.Api(_{{ $id }}_table);
+    var _{{ $id }}_table ,_{{$id}}_table_api;
+    try {
+        _{{$id}}_table= $('#{{ $id }}').dataTable(_{{ $id }}_config);
+        new $.fn.dataTable.FixedHeader(_{{ $id }}_table);
+        _{{ $id }}_table_api = new $.fn.dataTable.Api(_{{ $id }}_table);
+    } catch (e) {
+        console.error("{{$id}}错误："+e);
+    }
 
     {{-- 注销表格代码无意义，只需要在config中添加destroy:true即可--}}
     // var _uniqid_t = new Date().getTime();
