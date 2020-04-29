@@ -11,26 +11,26 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="{{ mix("css/bootstrap.css") }}">
-    <link rel="stylesheet" href="{{ mix("css/font-awesome.css") }}">
-    <link rel="stylesheet" href="{{ mix("css/plugins/pace-flash.css") }}">
+    <link rel="stylesheet" href="{{ env('APP_PREFIX', '') }}{{ mix("css/bootstrap.css") }}">
+    <link rel="stylesheet" href="{{ env('APP_PREFIX', '') }}{{ mix("css/font-awesome.css") }}">
+    <link rel="stylesheet" href="{{ env('APP_PREFIX', '') }}{{ mix("css/plugins/pace-flash.css") }}">
 
     <!-- Resources -->
     {!! app('resources')->styles() !!}
 
     <!-- Theme style -->
-    <link rel="stylesheet" href="{{ mix("css/adminlte.css") }}">
+    <link rel="stylesheet" href="{{ env('APP_PREFIX', '') }}{{ mix("css/adminlte.css") }}">
 
 
     <!-- REQUIRED JS SCRIPTS -->
-    <script src="{{ mix("js/manifest.js") }}"></script>
-    <script src="{{ mix("js/vendor.js") }}"></script>
-    <script src="{{ mix("js/bootstrap.js") }}"></script>
-    <script src="{{ mix("js/plugins/pace.js") }}"></script>
+    <script src="{{ env('APP_PREFIX', '') }}{{ mix("js/manifest.js") }}"></script>
+    <script src="{{ env('APP_PREFIX', '') }}{{ mix("js/vendor.js") }}"></script>
+    <script src="{{ env('APP_PREFIX', '') }}{{ mix("js/bootstrap.js") }}"></script>
+    <script src="{{ env('APP_PREFIX', '') }}{{ mix("js/plugins/pace.js") }}"></script>
 
     {!! app('resources')->scripts('header') !!}
 
-    <script src="{{ mix("js/adminlte.js") }}"></script>
+    <script src="{{ env('APP_PREFIX', '') }}{{ mix("js/adminlte.js") }}"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -71,9 +71,9 @@
 <!-- ./wrapper -->
 
 <!-- Scripts -->
-<script src="{{ mix("js/plugins/jquery.pjax.js") }}"></script>
-<script src="{{ mix("js/plugins/fastclick.js") }}"></script>
-<script src="{{ mix("js/plugins/toastr.js") }}"></script>
+<script src="{{ env('APP_PREFIX', '') }}{{ mix("js/plugins/jquery.pjax.js") }}"></script>
+<script src="{{ env('APP_PREFIX', '') }}{{ mix("js/plugins/fastclick.js") }}"></script>
+<script src="{{ env('APP_PREFIX', '') }}{{ mix("js/plugins/toastr.js") }}"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {

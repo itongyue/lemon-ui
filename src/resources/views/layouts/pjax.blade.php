@@ -5,7 +5,7 @@
 {!! app('resources')->styles() !!}
 
 <!-- Theme style -->
-<link rel="stylesheet" href="{{ mix("css/adminlte.css") }}">
+<link rel="stylesheet" href="{{ env('APP_PREFIX', '') }}{{ mix("css/adminlte.css") }}">
 
 {!! app('resources')->scripts('header') !!}
 
