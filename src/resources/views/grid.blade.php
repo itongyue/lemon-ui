@@ -159,9 +159,9 @@
                         </td>
                     </tr>
                 @empty
-                    <tr>
-                        <td colspan="100">{{ $emptyString }}</td>
-                    </tr>
+{{--                    <tr>--}}
+{{--                        <td colspan="100">{{ $emptyString }}</td>--}}
+{{--                    </tr>--}}
                 @endforelse
                 </tbody>
 
