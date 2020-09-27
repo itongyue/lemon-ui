@@ -124,7 +124,9 @@ class BulkAction extends Element implements Action
 
         $button->setPrefix($this->prefix);
         $button->attribute('select-rows', true);
-        $button->attribute('nopjax', $this->nopjax);
+        if ($this->nopjax === true) {
+            $button->attribute('nopjax', $this->nopjax);
+        }
 
         return $button->render(...$this->params);
     }
