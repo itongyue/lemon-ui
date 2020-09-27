@@ -44,6 +44,8 @@ class BulkAction extends Element implements Action
      */
     protected $color = UIRepository::STYLE_DEFAULT;
 
+    protected $nopjax = false;
+
     /**
      * @var string
      */
@@ -88,6 +90,10 @@ class BulkAction extends Element implements Action
         return $this;
     }
 
+    public function nopjax($nopjax = false) {
+        $this->nopjax = $nopjax;
+    }
+
     protected function formatClass()
     {
         $this->addClass(array_get($this->styles, 'button.color.'. $this->color, $this->color));
@@ -118,6 +124,7 @@ class BulkAction extends Element implements Action
 
         $button->setPrefix($this->prefix);
         $button->attribute('select-rows', true);
+        $button->attribute('nopjax', $this->nopjax);
 
         return $button->render(...$this->params);
     }
