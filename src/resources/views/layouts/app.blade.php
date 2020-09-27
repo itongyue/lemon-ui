@@ -100,11 +100,16 @@
     });
 
     $(document).on('submit.pjax', 'form[pjax-container]', function(event) {
-        $.pjax.submit(event, {
-            push: false,
-            replace: false,
-            scrollTo: false
-        });
+        var button = $(event.currentTarget).find('button[nopjax]');
+        if (button.length > 0) {
+            event.currentTarget.submit();
+        } else {
+            $.pjax.submit(event, {
+                push: false,
+                replace: false,
+                scrollTo: false
+            });
+        }
     });
 
     $(document).on("pjax:popstate", function() {
